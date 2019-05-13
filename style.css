@@ -1,0 +1,46 @@
+body{
+	background-color: #444;
+	color: #333;
+	font-family: Consolas, monospace;
+}
+header, nav, article, footer{
+	max-width: 1000px;
+	width: 100%;
+	margin: 0 auto;
+	padding: 10px;
+}
+header{
+	background-color: #CCC;
+	border-bottom: 1px solid #AAA;
+	text-align: center;
+	border-top-right-radius: 3px;
+	border-top-left-radius: 3px;
+}
+nav{
+	background-color: #e6e8ed;
+	border-bottom: 1px solid #999;
+}
+nav a{
+	margin-right: 5px;
+	color: #3869b7;
+}
+nav a:hover{
+	color: #7d38b7;
+}
+article{
+	background-color: #FAFAFA;
+	min-height: 150px;
+}
+footer{
+	background-color: #999;
+	color: #FFF;
+	text-align: center;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+}
+span.good{
+	color: green;
+}
+span.bad{
+	color: darkred;
+}
