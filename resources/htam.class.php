@@ -5,9 +5,9 @@ class HTAM
 {
 	private $currentDir;
 	
-	function __construct()
+	function __construct($dir)
 	{
-		$this->currentDir = dirname(__FILE__);
+		$this->currentDir = $dir;
 	}
 
 	private function searchFor($file)
@@ -29,7 +29,12 @@ class HTAM
 		if($this->searchFor($file))
 			return false;
 
-		return file($this->currentDir.'/'.$file);
+		return @file($this->currentDir.'/'.$file);
+	}
+
+	function dir()
+	{
+		return $this->currentDir;
 	}
 
 	function changeDir($newdir)
@@ -39,33 +44,68 @@ class HTAM
 
 	function hasHtaccess()
 	{
-		return $this->searchFor($this->currentDir."/.htaccess");
+		return $this->searchFor(".htaccess");
 	}
 
 	function hasHtpasswd()
 	{
-		return $this->searchFor($this->currentDir."/.htpasswd");
+		return $this->searchFor(".htpasswd");
+	}
+
+	function deleteHtaccess()
+	{
+		return @unlink($this->currentDir."/.htaccess");
+	}
+
+	function deleteHtpasswd()
+	{
+		return @unlink($this->currentDir."/.htpasswd");
+	}
+
+	function checkPermissions()
+	{
+		return is_readable($this->currentDir."/.htaccess") &&
+			   is_readable($this->currentDir."/.htpasswd") &&
+			   is_writable($this->currentDir."/.htaccess") &&
+			   is_writable($this->currentDir."/.htpasswd");
+	}
+
+	function setPermissions()
+	{
+		return chmod($this->currentDir."/.htaccess", 644) &&
+			   chmod($this->currentDir."/.htpasswd", 644);
 	}
 
 	function createHtfiles()
 	{
-		if(!hasHtaccess())
+		if(!$this->hasHtaccess())
 		{
 			$file = fopen($this->currentDir."/.htaccess", "w+");
+			if(!$file)
+				return false;
 			fclose($file);
 		}
 
-		if(!hasHtpasswd())
+		if(!$this->hasHtpasswd())
 		{
 			$file = fopen($this->currentDir."/.htpasswd", "w+");
+			if(!$file)
+				return false;
 			fclose($file);
 		}
+
+		return true;
+	}
+
+	function icon()
+	{
+		return $this->isProtected() ? "&#x1F510" : ""; 
 	}
 
 	function getInfo()
 	{
-		$info = array();
-		$lines = $this->getFileContent($this->currentDir."/.htaccess");
+		$info = array("N/D", "N/D");
+		$lines = $this->getFileContent(".htaccess");
 		if(!$lines)
 			return $info;
 
@@ -84,7 +124,9 @@ class HTAM
 		if(!$this->hasHtaccess())
 			return false;
 
-		$lines = $this->getFileContent($this->currentDir."/.htaccess");
+		$lines = $this->getFileContent(".htaccess");
+		if(!$lines)
+			return false;
 		$i = 0;
 		while($i<count($lines) && !preg_match("/HTAM - START/", $lines[$i]))
 			$i++;
@@ -95,14 +137,20 @@ class HTAM
 	function addProtection()
 	{
 		$fh = fopen($this->currentDir."/.htaccess", "w+");
+		if(!$fh)
+			return false;
 		$prot = "# HTAM - START \n # HTAccess Manager Auto-generated script \nAuthType Basic \nAuthName \"Protected area\" \nAuthUserFile \"$this->currentDir/" . ".htpasswd" . "\"\nrequire valid-user \n# HTAM - END\n";
 		fwrite($fh, $prot);
 		fclose($fh);
+		return true;
 	}
 
 	function removeProtection()
 	{
-		$lines = $this->getFileContent($this->currentDir."/.htaccess");
+		$lines = $this->getFileContent(".htaccess");
+		if(!$lines)
+			return false;
+
 		$i = 0;
 		while($i<count($lines) && !preg_match("/HTAM - START/", $line[$i]))
 			$i++;
@@ -130,13 +178,28 @@ class HTAM
 		if(!$this->hasHtpasswd())
 			return $users;
 
-		$lines = getFileContent($this->currentDir."/.htpasswd");
+		$lines = $this->getFileContent(".htpasswd");
+		if(!$lines)
+			return $users;
+
 		foreach ($lines as $line) {
 			$item = explode(":", $lines);
 			array_push($users, new HUser($item[0], $item[1], $item[2]));
 		}
 
 		return $users;
+	}
+
+	function countAdmin()
+	{
+		$u = $this->getUsers();
+		$n = 0;
+		if(!empty($u))
+			foreach ($u as $user) 
+				if($user->isAdmin())
+					$n++;
+
+		return $n;
 	}
 
 	function changeUsers($users)
@@ -166,7 +229,7 @@ class HTAM
 
 	function getSubDirFiles()
 	{
-		return array_diff(scandir($this->currentDir), array('..', '.'));
+		return array_diff(scandir($this->currentDir, 1), array('..', '.'));
 	}
 }
 
@@ -269,12 +332,14 @@ function generatePassword($psw)
 	return crypt($psw, base64_encode($psw));
 }
 
-function good($msg)
+function good($msg, $simple=0)
 {
-	return '<span class="good">'.$msg.'</span>';
+	$cl = !$simple ? "good box" : "good";
+	return '<span class="'.$cl.'">'.$msg.'</span>';
 }
 
-function bad($msg)
+function bad($msg, $simple=0)
 {
-	return '<span class="bad">'.$msg.'</span>';
+	$cl = !$simple ? "bad box" : "bad";
+	return '<span class="'.$cl.'">'.$msg.'</span>';
 }

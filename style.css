@@ -1,7 +1,7 @@
 body{
 	background-color: #444;
 	color: #333;
-	font-family: Consolas, monospace;
+	font-family: Verdana, sans-serif;
 }
 header, nav, article, footer{
 	max-width: 1000px;
@@ -21,10 +21,12 @@ nav{
 	border-bottom: 1px solid #999;
 }
 nav a{
-	margin-right: 5px;
+	margin-right: 5px;	
+}
+a{
 	color: #3869b7;
 }
-nav a:hover{
+a:hover{
 	color: #7d38b7;
 }
 article{
@@ -43,4 +45,22 @@ span.good{
 }
 span.bad{
 	color: darkred;
+}
+span.box{
+	display: block;
+	border-radius: 3px;
+	padding: 10px;
+}
+span.box.good{
+	background-color: #dce5da;
+}
+span.box.bad{
+	background-color: #e5dada;
+}
+ul.dir{
+	list-style-type: none;
+}
+
+ul.dir li{
+	margin-left: -15px;
 }

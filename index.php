@@ -22,6 +22,9 @@ include "resources/htam.class.php";
 if(isset($_SERVER['PHP_AUTH_USER']))
 	$me = new HUser($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], true);
 
+
+$htam = new htam(dirname(__FILE__));
+
 // ---------------------------------
 
 ?>
@@ -36,7 +39,7 @@ if(isset($_SERVER['PHP_AUTH_USER']))
 
 <header>
 	<h2>HTAccess Manager</h2>
-	<small><strong>Current directory:</strong> <?=dirname(__FILE__);?></small>
+	<small><strong>Current directory:</strong> <?=$htam->dir();?> <?=$htam->icon();?></small>
 </header>
 
 <nav>
@@ -47,8 +50,6 @@ if(isset($_SERVER['PHP_AUTH_USER']))
 
 <article>
 <?php
-	
-	$htam = new htam();
 
 	if($s == "dir")
 		include "resources/dir.php";
