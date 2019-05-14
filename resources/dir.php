@@ -43,14 +43,18 @@ if($s == "dir")
 	}
 	elseif($a == 4)
 	{
-		if($htam->deleteHtaccess())
+		if($htam->isProtected())
+			echo bad("You must disable protection to delete Htaccess.");
+		elseif($htam->deleteHtaccess())
 			echo good("Htaccess deleted successfully.");
 		else
 			echo bad("Error: unable to delete Htaccess.");
 	}
 	elseif($a == 5)
 	{
-		if($htam->deleteHtpasswd())
+		if($htam->isProtected())
+			echo bad("You must disable protection to delete Htpasswd.");
+		elseif($htam->deleteHtpasswd())
 			echo good("Htpasswd deleted successfully.");
 		else
 			echo bad("Error: unable to delete Htpasswd.");

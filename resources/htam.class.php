@@ -26,8 +26,8 @@ class HTAM
 
 	private function getFileContent($file)
 	{
-		if($this->searchFor($file))
-			return false;
+		if(!$this->searchFor($file))
+			return array();
 
 		return @file($this->currentDir.'/'.$file);
 	}
@@ -106,7 +106,7 @@ class HTAM
 	{
 		$info = array("N/D", "N/D");
 		$lines = $this->getFileContent(".htaccess");
-		if(!$lines)
+		if(empty($lines))
 			return $info;
 
 		foreach ($lines as $line) {
@@ -125,7 +125,7 @@ class HTAM
 			return false;
 
 		$lines = $this->getFileContent(".htaccess");
-		if(!$lines)
+		if(empty($lines))
 			return false;
 		$i = 0;
 		while($i<count($lines) && !preg_match("/HTAM - START/", $lines[$i]))
@@ -148,7 +148,7 @@ class HTAM
 	function removeProtection()
 	{
 		$lines = $this->getFileContent(".htaccess");
-		if(!$lines)
+		if(empty($lines))
 			return false;
 
 		$i = 0;
@@ -179,12 +179,13 @@ class HTAM
 			return $users;
 
 		$lines = $this->getFileContent(".htpasswd");
-		if(!$lines)
+		if(empty($lines))
 			return $users;
 
-		foreach ($lines as $line) {
-			$item = explode(":", $lines);
-			array_push($users, new HUser($item[0], $item[1], $item[2]));
+		foreach ($lines as $line) 
+		{
+			$item = explode(":", $line);
+			array_push($users, new HUser($item[0], $item[1], trim($item[2])));
 		}
 
 		return $users;
@@ -202,20 +203,37 @@ class HTAM
 		return $n;
 	}
 
+	function findUser($name)
+	{
+		$u = $this->getUsers();
+		$i = 0;
+		if(!empty($u))
+			while($i<count($u))
+			{
+				if(($u[$i])->name() == $name)	
+					break;
+				$i++;
+			}
+
+		if(count($u) >= $i)
+			return -1;
+
+		return $i;
+	}
+
 	function changeUsers($users)
 	{
-		if($this->isProtected() && empty($users))
-			return false;
-
-		if($this->isProtected())
-
 		$checkOneAdmin = false;
 		$cleaned = "";
+		$i = count($users);
 		foreach($users as $user)
 		{
 			$cleaned .= $user->name().':'.$user->psw().':'.$user->isAdmin();
+			if($i-1 != 0) 
+				$cleaned .= "\n";
 			if(!$checkOneAdmin && $user->isAdmin()) 
 				$checkOneAdmin = true;
+			$i--;
 		}
 
 		if(!$checkOneAdmin && $this->isProtected())
@@ -225,6 +243,7 @@ class HTAM
 		$fh = fopen($this->currentDir."/.htpasswd", "w+");
 		fwrite($fh, $cleaned);
 		fclose($fh);
+		return true;
 	}
 
 	function getSubDirFiles()
@@ -241,7 +260,7 @@ class HUser
 	private $password;
 	private $admin;
 
-	function __construct($n, $p, $a)
+	function __construct($n="none", $p="", $a=0)
 	{
 		$this->username = $n;
 		$this->password = $p;
@@ -284,6 +303,11 @@ class HUser
 
 		$this->password = $pass;
 		return true;
+	}
+
+	public function toggleAdmin($set)
+	{
+		$this->admin = $set ? 1 : 0;
 	}
 }
 

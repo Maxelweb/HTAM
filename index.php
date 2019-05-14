@@ -53,6 +53,8 @@ $htam = new htam(dirname(__FILE__));
 
 	if($s == "dir")
 		include "resources/dir.php";
+	elseif($s == "users")
+		include "resources/users.php";
 	else
 		include "resources/dash.php";
 
