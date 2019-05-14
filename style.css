@@ -78,8 +78,11 @@ input{
 table{
 	width: 100%;
 }
-tr{
+td{
 	padding: 3px;
+	text-align: center;
+}
+tr{
 	background-color:  #E9E9E9;
 }
 tr:nth-child(odd){

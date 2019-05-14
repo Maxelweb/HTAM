@@ -13,24 +13,27 @@ if($s == "dir")
 	{
 		if(!$htam->isProtected())
 		{
-			if($htam->addProtection())
-				echo good("Directory protection activated.");
-			else
-				echo bad("Error: unable to add directory protection. Check file permissions.");
-		}
-		else
-		{
 			if(!$htam->hasHtaccess() || !$htam->hasHtpasswd() || $htam->countAdmin() == 0)
 			{
 				echo bad("Before enabling protection, you must <a href='?s=dir&a=3'>create htaccess and htpasswd</a> and add at least <strong>one administrator</strong> in <a href='?s=users'>Manage users</a>.");
 			}
 			else
-			{			
-				if($htam->removeProtection())
-					echo good("Directory protection removed.");
+			{
+				if($htam->addProtection())
+					echo good("Directory protection activated.");
 				else
-					echo bad("Error: unable to remove directory protection. Check file permissions.");
+					echo bad("Error: unable to add directory protection. Check file permissions.");
 			}
+		}
+		else
+		{
+			
+						
+			if($htam->removeProtection())
+				echo good("Directory protection removed.");
+			else
+				echo bad("Error: unable to remove directory protection. Check file permissions.");
+		
 		}
 	}
 	elseif($a == 3)
