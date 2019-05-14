@@ -1,5 +1,4 @@
-
-<section class="response">
+<section>
 <?php
 
 if($s == "dir")
@@ -12,7 +11,7 @@ if($s == "dir")
 
 	if($a == 1)
 	{
-		if($htam->isProtected())
+		if(!$htam->isProtected())
 		{
 			if($htam->addProtection())
 				echo good("Directory protection activated.");
@@ -79,23 +78,25 @@ if($s == "dir")
 		<li><strong>htaccess: </strong> <?=$htam->hasHtaccess() ? good("Yes",1) : bad("No",1) ;?></li>
 		<li><strong>htpasswd: </strong> <?=$htam->hasHtpasswd() ? good("Yes",1) : bad("No",1) ;?></li>
 		<li><strong>Area name: </strong> <?=$htam->getInfo()[0];?>
+		<li><strong>htaccess location: </strong> <code><?=$htam->hta();?></code>
+		<li><strong>htpasswd location: </strong> <code><?=$htam->htp();?></code>	
 	</ul>
 </section>
-
 
 <section>
 	<h3>Options</h3>
 
 	<ul>
-		<li><a href="?s=dir&a=1">Toggle directory protection</a></li>	
-		<li><a href="?s=dir&a=2">Show protected sub-directories and files</a></li>
+		<li>&#x1F511; <a href="?s=dir&a=1">Toggle directory protection</a></li>	
+		<li>&#x1F4C1; <a href="?s=dir&a=2">Show protected sub-directories and files</a></li>
 	</ul>
 
 	<ul>
-		<?php if(!$htam->hasHtaccess() && !$htam->hasHtpasswd()){ ?>
-			<li><a href="?s=dir&a=3">Create htaccess and htpasswd</a> (if not present)</li>
-		<?php } else { ?>
+		<?php if(!$htam->hasHtaccess() || !$htam->hasHtpasswd()){ ?>
+			<li><a href="?s=dir&a=3">Create htaccess and/or htpasswd</a> (if not present)</li>
+		<?php } if($htam->hasHtaccess()) { ?>
 		<li><a href="?s=dir&a=4">Delete htaccess file</a> (note: delete all existent config)</li>
+		<?php } if($htam->hasHtpasswd()) { ?>
 		<li><a href="?s=dir&a=5">Delete htpasswd file</a> (note: delete all users)</li>
 		<?php } ?>
 	</ul>

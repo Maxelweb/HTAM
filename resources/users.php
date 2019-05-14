@@ -32,7 +32,6 @@ if($s == "users")
 		}
 		else
 		{
-			echo $find;
 			if($find > -1)
 				$users[$find] = $user;
 			else
@@ -48,17 +47,39 @@ if($s == "users")
 	}
 	elseif($a == 2 && !empty($edit))
 	{
-
 		$find = $htam->findUser($edit);
 		$user = $find > -1 ? $users[$find] : "";
 		if(empty($user))
 			echo bad("The user selected has not been found.");
-		elseif($user->name() == $me->name() && $htam->isProtected())
+		elseif(isset($me) && $user->name() == $me->name() && $htam->isProtected())
 			echo bad("You can't delete yourself while directory protection is active.");
 		else
 		{
 			unset($users[$find]);
-			echo good("The user has been removed permanently.");
+			if($htam->changeUsers($users))
+				echo good("The user has been removed permanently.");
+			else
+				echo bad("Error: unable to update users file. Check permissions.");
+			
+		}
+	}
+	elseif($a == 3 && !empty($edit))
+	{
+		$find = $htam->findUser($edit);
+		$user = $find > -1 ? $users[$find] : "";
+		if(empty($user))
+			echo bad("The user selected has not been found.");
+		elseif( ($htam->countAdmin() == 1 || (isset($me) && $user->name() == $me->name()) )
+					&& $user->isAdmin() && $htam->isProtected())
+			echo bad("You can't remove the last administrator or yourself as administrator.");
+		else
+		{
+			$users[$find]->toggleAdmin($user->isAdmin() ? 0 : 1); 
+			if($htam->changeUsers($users))
+				echo good("The role of the user <strong>{$user->name()}</strong> has been changed.");
+			else
+				echo bad("Error: unable to update users file. Check permissions.");
+			
 		}
 	}
 }
@@ -66,11 +87,33 @@ if($s == "users")
 ?>
 </section>
 
+<script>
+	var names = [<?php foreach($users as $u) echo "'".$u->name()."',";?>];
+	function checkUsername()
+	{
+		var i = document.getElementById("ncheck");
+		var j = document.getElementById("checker");
+
+		if(i.value === "" || i.value.length < 3)
+			j.innerHTML = "";
+		else if(names.indexOf(i.value) > -1)
+			j.innerHTML = "<span class='bad'>&#x2716; Username in use! The password will be overrided.</span>"; 
+		else
+			j.innerHTML = "<span class='good'>&#x2714; Username not used!</span>";
+	}
+
+	function setName(name)
+	{
+		document.getElementById("ncheck").value = name;
+	}
+</script>
+
 <section>
 	<h3>Add / edit user</h3>
-	<p>Using an existent username, the user settings will be overrided.</p>
+	<p>If the username is already in use, the password will be overrided with the new one.</p>
 	<form action="?s=users&a=1" method="POST">
-		<input type="text" name="uname" placeholder="Username" value="<?=isset($edit) && $a==0?$edit:'';?>"><br>
+		<input type="text" name="uname" id="ncheck" onkeyup="checkUsername();" placeholder="Username" value="<?=$a==1?$un:'';?>">
+		<span id="checker"></span><br>
 		<input type="password" name="upass" placeholder="Password">
 		<input type="password" name="urpass" placeholder="Repeat Password"><br>
 		<input type="submit">
@@ -85,17 +128,22 @@ if($s == "users")
 		if(empty($users))
 			echo bad("No user found.",1);
 		else
+		{
+			echo "<div class='responsive'><table>";
 			foreach ($users as $user) 
 			{
-				echo "<li>{$user->name()}, ";
-				echo ($user->isAdmin() ? bad("administrator",1) : good("user",1));
-				echo " [<a href='?s=users&edit={$user->name()}'>edit password</a>]"; 
+				echo "<tr><td>{$user->name()}</td>";
+				echo "<td>".($user->isAdmin() ? bad("administrator",1) : good("user",1))."</td>";
+				echo "<td><span class='box'>&#x270F; <a href='#' onclick='setName(\"{$user->name()}\"); checkUsername();'>edit password</a></span></td>"; 
 				if(!$user->isAdmin())
-					echo " [<a href='?s=users&edit={$user->name()}&a=3'>set admin</a>]";
+					echo "<td><span class='box'>&#x1F920; <a href='?s=users&edit={$user->name()}&a=3'>set admin</a></span></td>";
 				else
-					echo " [<a href='?s=users&edit={$user->name()}&a=3'>set user</a>]";
-				echo " [<a href='?s=users&delete={$user->name()}'>delete</a>]";
-				echo "</li>";
+					echo "<td><span class='box'>&#x1F603; <a href='?s=users&edit={$user->name()}&a=3'>set user</a></span></td>";
+				echo "<td><span class='box'>&#x274C; <a href='?s=users&a=2&edit={$user->name()}'>delete</a></span></td>";
+				echo "</tr>";
 			}
+			echo "</table></div>";
+		}
+
 	?>
 </section>

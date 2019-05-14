@@ -43,9 +43,9 @@ $htam = new htam(dirname(__FILE__));
 </header>
 
 <nav>
-	&#x1F3E0; <a href="?">Dashboard</a>
-	&#x1F4C1; <a href="?s=dir">Manage directory</a>
-	&#x1F465; <a href="?s=users">Manage users</a>
+	<span>&#x1F3E0; <a href="?">Dashboard</a></span>
+	<span>&#x1F4C1; <a href="?s=dir">Manage directory</a></span>
+	<span>&#x1F465; <a href="?s=users">Manage users</a></span>
 </nav>
 
 <article>

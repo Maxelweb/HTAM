@@ -3,9 +3,12 @@ body{
 	color: #333;
 	font-family: Verdana, sans-serif;
 }
+h1,h2,h3,h4{
+	color:  #333;
+}
 header, nav, article, footer{
 	max-width: 1000px;
-	width: 100%;
+	width: auto;
 	margin: 0 auto;
 	padding: 10px;
 }
@@ -20,8 +23,9 @@ nav{
 	background-color: #e6e8ed;
 	border-bottom: 1px solid #999;
 }
-nav a{
-	margin-right: 5px;	
+nav span{
+	margin-right: 5px;
+	display:  inline-block;	
 }
 a{
 	color: #3869b7;
@@ -50,6 +54,7 @@ span.box{
 	display: block;
 	border-radius: 3px;
 	padding: 10px;
+	background-color: #e6e8ed;
 }
 span.box.good{
 	background-color: #dce5da;
@@ -63,4 +68,23 @@ ul.dir{
 
 ul.dir li{
 	margin-left: -15px;
+}
+input{
+	margin: 5px;
+}
+.responsive{
+	overflow-x: auto;
+}
+table{
+	width: 100%;
+}
+tr{
+	padding: 3px;
+	background-color:  #E9E9E9;
+}
+tr:nth-child(odd){
+	background-color:  #FFF;
+}
+#checker{
+	font-size:  80%;
 }

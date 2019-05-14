@@ -1,0 +1,12 @@
+# i like big boobs
+# ---
+
+
+
+# HTAM - START 
+# HTAccess Manager Auto-generated script 
+AuthType Basic 
+AuthName "Protected area" 
+AuthUserFile "D:\maria\Desktop\Github\HTAM\.htpasswd"
+require valid-user 
+# HTAM - END

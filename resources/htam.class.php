@@ -4,32 +4,45 @@
 class HTAM
 {
 	private $currentDir;
+	private $htaFile;
+	private $htpFile;
 	
 	function __construct($dir)
 	{
 		$this->currentDir = $dir;
+		$this->htaFile = ".htaccess";
+		$this->htpFile = ".htpasswd";
 	}
 
 	private function searchFor($file)
 	{
-		return file_exists($this->currentDir.'/'.$file);
+		return file_exists($this->currentDir.DIRECTORY_SEPARATOR.$file);
 	}
 
 	private function getInside($string)
 	{
 	    $pattern = "/\"(.*?)\"/";
 	    preg_match_all($pattern, $string, $matches);
-	    if(!empty($matches[1]))
-	        return $matches[1];
-	    return array();
+	    if(!empty($matches[1][0]))
+	        return $matches[1][0];
+	    return "";
 	}
 
 	private function getFileContent($file)
 	{
 		if(!$this->searchFor($file))
 			return array();
+		return @file($this->currentDir.DIRECTORY_SEPARATOR.$file);
+	}
 
-		return @file($this->currentDir.'/'.$file);
+	function hta()
+	{
+		return $this->currentDir.DIRECTORY_SEPARATOR.$this->htaFile;
+	}
+
+	function htp()
+	{
+		return $this->currentDir.DIRECTORY_SEPARATOR.$this->htpFile;
 	}
 
 	function dir()
@@ -44,43 +57,43 @@ class HTAM
 
 	function hasHtaccess()
 	{
-		return $this->searchFor(".htaccess");
+		return $this->searchFor($this->htaFile);
 	}
 
 	function hasHtpasswd()
 	{
-		return $this->searchFor(".htpasswd");
+		return $this->searchFor($this->htpFile);
 	}
 
 	function deleteHtaccess()
 	{
-		return @unlink($this->currentDir."/.htaccess");
+		return unlink($this->hta());
 	}
 
 	function deleteHtpasswd()
 	{
-		return @unlink($this->currentDir."/.htpasswd");
+		return @unlink($this->htp());
 	}
 
 	function checkPermissions()
 	{
-		return is_readable($this->currentDir."/.htaccess") &&
-			   is_readable($this->currentDir."/.htpasswd") &&
-			   is_writable($this->currentDir."/.htaccess") &&
-			   is_writable($this->currentDir."/.htpasswd");
+		return is_readable($this->hta()) &&
+			   is_readable($this->htp()) &&
+			   is_writable($this->hta()) &&
+			   is_writable($this->htp());
 	}
 
 	function setPermissions()
 	{
-		return chmod($this->currentDir."/.htaccess", 644) &&
-			   chmod($this->currentDir."/.htpasswd", 644);
+		return chmod($this->hta(), 644) &&
+			   chmod($this->htp(), 644);
 	}
 
 	function createHtfiles()
 	{
 		if(!$this->hasHtaccess())
 		{
-			$file = fopen($this->currentDir."/.htaccess", "w+");
+			$file = fopen($this->hta(), "w+");
 			if(!$file)
 				return false;
 			fclose($file);
@@ -88,7 +101,7 @@ class HTAM
 
 		if(!$this->hasHtpasswd())
 		{
-			$file = fopen($this->currentDir."/.htpasswd", "w+");
+			$file = fopen($this->htp(), "w+");
 			if(!$file)
 				return false;
 			fclose($file);
@@ -99,21 +112,21 @@ class HTAM
 
 	function icon()
 	{
-		return $this->isProtected() ? "&#x1F510" : ""; 
+		return $this->isProtected() ? "&#x1F512" : ""; 
 	}
 
 	function getInfo()
 	{
 		$info = array("N/D", "N/D");
-		$lines = $this->getFileContent(".htaccess");
+		$lines = $this->getFileContent($this->htaFile);
 		if(empty($lines))
 			return $info;
 
 		foreach ($lines as $line) {
-			if(preg_match("/AuthName/"))
-				$info[0] = getInside($line);
-			elseif(preg_match("/AuthUserFile/"))
-				$info[1] = getInside($line);
+			if(preg_match("/AuthName/", $line))
+				$info[0] = $this->getInside($line);
+			elseif(preg_match("/AuthUserFile/", $line))
+				$info[1] = $this->getInside($line);
 		}
 
 		return $info;
@@ -124,7 +137,7 @@ class HTAM
 		if(!$this->hasHtaccess())
 			return false;
 
-		$lines = $this->getFileContent(".htaccess");
+		$lines = $this->getFileContent($this->htaFile);
 		if(empty($lines))
 			return false;
 		$i = 0;
@@ -136,10 +149,13 @@ class HTAM
 
 	function addProtection()
 	{
-		$fh = fopen($this->currentDir."/.htaccess", "w+");
+		if($this->isProtected())
+			return false;
+
+		$fh = fopen($this->hta(), "a+");
 		if(!$fh)
 			return false;
-		$prot = "# HTAM - START \n # HTAccess Manager Auto-generated script \nAuthType Basic \nAuthName \"Protected area\" \nAuthUserFile \"$this->currentDir/" . ".htpasswd" . "\"\nrequire valid-user \n# HTAM - END\n";
+		$prot = "\n# HTAM - START \n# HTAccess Manager Auto-generated script \nAuthType Basic \nAuthName \"Protected area\" \nAuthUserFile \"" . $this->htp() . "\"\nrequire valid-user \n# HTAM - END\n";
 		fwrite($fh, $prot);
 		fclose($fh);
 		return true;
@@ -147,25 +163,25 @@ class HTAM
 
 	function removeProtection()
 	{
-		$lines = $this->getFileContent(".htaccess");
+		$lines = $this->getFileContent($this->htaFile);
 		if(empty($lines))
 			return false;
 
 		$i = 0;
-		while($i<count($lines) && !preg_match("/HTAM - START/", $line[$i]))
+		while($i<count($lines) && !preg_match("/HTAM - START/", $lines[$i]))
 			$i++;
 
 		if($i >= count($lines))
 			return false;
 
 		for($j=$i; $j < $i+7; $j++)
-			unset($lines[$x]);
+			unset($lines[$j]);
 		
 		$cleaned = "";
 		foreach($lines as $line)
 			$cleaned .= $line;
 		
-		$fh = fopen($this->currentDir."/.htaccess", "a");
+		$fh = fopen($this->hta(), "w+");
 		fwrite($fh, $cleaned);
 		fclose($fh);
 
@@ -178,7 +194,7 @@ class HTAM
 		if(!$this->hasHtpasswd())
 			return $users;
 
-		$lines = $this->getFileContent(".htpasswd");
+		$lines = $this->getFileContent($this->htpFile);
 		if(empty($lines))
 			return $users;
 
@@ -215,7 +231,7 @@ class HTAM
 				$i++;
 			}
 
-		if(count($u) >= $i)
+		if($i >= count($u))
 			return -1;
 
 		return $i;
@@ -240,7 +256,7 @@ class HTAM
 			return false;
 
 		
-		$fh = fopen($this->currentDir."/.htpasswd", "w+");
+		$fh = fopen($this->htp(), "w+");
 		fwrite($fh, $cleaned);
 		fclose($fh);
 		return true;
@@ -353,7 +369,8 @@ class HUpdate
 
 function generatePassword($psw)
 {
-	return crypt($psw, base64_encode($psw));
+	//return crypt($psw, base64_encode($psw));
+	return password_hash($psw, PASSWORD_BCRYPT);
 }
 
 function good($msg, $simple=0)
