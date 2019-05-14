@@ -10,8 +10,8 @@
 // ------------ Globals ------------
 
 define("VERSION", "v0.1");
-$s = $_GET['s'];
-
+$s = isset($_GET['s']) ? $_GET['s'] : "";
+$a = isset($_GET['a']) ? $_GET['a'] : 0;
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -21,7 +21,6 @@ include "resources/htam.class.php";
 
 if(isset($_SERVER['PHP_AUTH_USER']))
 	$me = new HUser($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], true);
-
 
 // ---------------------------------
 

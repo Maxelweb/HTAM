@@ -1,0 +1,7 @@
+{
+	version : 0.1,
+	date	: "05-2019",
+	status  : "stable",
+	description : "Initial release",
+	repo : "https://github.com/Maxelweb/HTAM"
+}

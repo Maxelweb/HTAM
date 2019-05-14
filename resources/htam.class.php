@@ -1,5 +1,6 @@
 <?php
 
+
 class HTAM
 {
 	private $currentDir;
@@ -162,6 +163,11 @@ class HTAM
 		fwrite($fh, $cleaned);
 		fclose($fh);
 	}
+
+	function getSubDirFiles()
+	{
+		return array_diff(scandir($this->currentDir), array('..', '.'));
+	}
 }
 
 
@@ -215,6 +221,45 @@ class HUser
 
 		$this->password = $pass;
 		return true;
+	}
+}
+
+
+class HUpdate
+{
+	private $version;
+	
+	function __construct()
+	{ 
+		$version = VERSION;
+	}
+
+	private function checkNewVersion()
+	{
+		ini_set("allow_url_fopen", 1);
+		$json = file_get_contents('http://api.debug.ovh/htam.json');
+		if(!$json)
+			return (object) array();
+
+		return json_decode($json);
+	}
+
+	function currentVersion()
+	{
+		return $version;
+	}
+
+	function latestVersion()
+	{
+		$v = $this->checkNewVersion();
+		if(!empty($v))
+			return $v->version;
+		return $version;
+	}
+
+	function info()
+	{
+		return checkNewVersion();
 	}
 }
 
