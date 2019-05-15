@@ -43,3 +43,5 @@ This software is pretty simple to install.
 - Works both with Linux and Windows
 - ☕ Online updates checker
 - 😍 Emoji support!
+
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H6VK9N)
