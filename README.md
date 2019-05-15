@@ -1,3 +1,5 @@
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H6VK9N)
+
 # HTAccess Manager
 
 ![screenshot htam](https://i.imgur.com/U7Sz3LI.png)
@@ -41,7 +43,6 @@ This software is pretty simple to install.
 - View current file and sub-directories protected by the script
 - Works with existing .htaccess file (it only appends / remove some particular lines to toggle the script)
 - Works both with Linux and Windows
+- 📱 Responsive lightweight design
 - ☕ Online updates checker
-- 😍 Emoji support!
-
-[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H6VK9N)
+- 😍 Built with Emoji!
