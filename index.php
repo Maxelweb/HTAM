@@ -9,21 +9,29 @@
 
 // ------------ Globals ------------
 
+ini_set('display_errors', 1);
+ini_set("allow_url_fopen", 1);
+error_reporting(E_ALL);
+
+
 define("VERSION", "v0.1");
 $s = isset($_GET['s']) ? $_GET['s'] : "";
 $a = isset($_GET['a']) ? $_GET['a'] : 0;
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
+// ------------ Classes and Functions ------------
 
 include "resources/htam.class.php";
 
-if(isset($_SERVER['PHP_AUTH_USER']))
-	$me = new HUser($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], true);
 
+// ------------ Initialization and Authorization ------------
 
 $htam = new htam(dirname(__FILE__));
+
+if(isset($_SERVER['PHP_AUTH_USER']))
+{
+	$findme = $htam->findUser($_SERVER['PHP_AUTH_USER']);
+	$me = $findme > -1 ? $htam->getUsers()[$findme] : new HUser();
+}
 
 // ---------------------------------
 
@@ -50,21 +58,19 @@ $htam = new htam(dirname(__FILE__));
 
 <article>
 <?php
-
 	if($s == "dir")
 		include "resources/dir.php";
 	elseif($s == "users")
 		include "resources/users.php";
+	elseif($s == "updates")
+		include "resources/updates.php";
 	else
 		include "resources/dash.php";
-
-
-
 ?>
 </article>
 
 <footer>
-	HTAccess Manager - <?=VERSION;?>
+	<a href="https://github.com/Maxelweb/HTAM">HTAM <?=VERSION;?></a> - Developed by <a href='https://marianosciacco.it'>M. Sciacco</a> - <a href="?s=updates">Check for updates</a>
 </footer>
 
 </body>

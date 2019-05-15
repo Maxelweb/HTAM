@@ -328,41 +328,41 @@ class HUser
 }
 
 
-class HUpdate
+class HUpdates
 {
 	private $version;
+	private $payload;
 	
 	function __construct()
 	{ 
-		$version = VERSION;
+		$this->version = VERSION;
+		$this->payload = $this->checkNewVersion();
 	}
 
 	private function checkNewVersion()
 	{
-		ini_set("allow_url_fopen", 1);
 		$json = file_get_contents('http://api.debug.ovh/htam.json');
 		if(!$json)
-			return (object) array();
+			return array();
 
-		return json_decode($json);
+		return json_decode($json, 1);
 	}
 
 	function currentVersion()
 	{
-		return $version;
+		return $this->version;
 	}
 
 	function latestVersion()
 	{
-		$v = $this->checkNewVersion();
-		if(!empty($v))
-			return $v->version;
-		return $version;
+	 	if(!empty($this->payload))
+	 		return ($this->payload)['version'];
+	 	return "N/A";
 	}
 
 	function info()
 	{
-		return checkNewVersion();
+		return $this->payload;
 	}
 }
 
