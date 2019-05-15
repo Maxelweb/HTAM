@@ -1,16 +1,10 @@
-<?php
-
-
-$hup = new HUpdates();
-
-?>
-
 <section>
-
+	<h3>&#x2615; Updates</h3>
 	<?php 
+		$hup = new HUpdates();
 
 		if($hup->latestVersion() == "N/A")
-			echo bad("Unable to check for new updates. Try later.");
+			echo bad("Unable to check for new updates. Try later or checkout the <a href='".REPO."'>official repository</a>.");
 		elseif($hup->currentVersion() != $hup->latestVersion()) 
 			echo bad("Your version is <b>not</b> up to date.");
 		else

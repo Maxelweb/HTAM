@@ -13,8 +13,8 @@ ini_set('display_errors', 1);
 ini_set("allow_url_fopen", 1);
 error_reporting(E_ALL);
 
-
 define("VERSION", "v0.1");
+define("REPO", "https://github.com/Maxelweb/HTAM");
 $s = isset($_GET['s']) ? $_GET['s'] : "";
 $a = isset($_GET['a']) ? $_GET['a'] : 0;
 
@@ -28,9 +28,17 @@ include "resources/htam.class.php";
 $htam = new htam(dirname(__FILE__));
 
 if(isset($_SERVER['PHP_AUTH_USER']))
-{
 	$findme = $htam->findUser($_SERVER['PHP_AUTH_USER']);
-	$me = $findme > -1 ? $htam->getUsers()[$findme] : new HUser();
+else
+	$findme = -1;
+
+$me = $findme > -1 ? $htam->getUsers()[$findme] : new HUser();
+
+if($htam->isProtected() && !$me->isAdmin())
+{
+	echo "<h1><a href='https://github.com/Maxelweb/HTAM'>HTAccess Manager</a></h1>";
+	echo "<p>You logged in as a user. You must be an admin to access this page.</p>";
+	die();
 }
 
 // ---------------------------------
@@ -54,6 +62,7 @@ if(isset($_SERVER['PHP_AUTH_USER']))
 	<span>&#x1F3E0; <a href="?">Dashboard</a></span>
 	<span>&#x1F4C1; <a href="?s=dir">Manage directory</a></span>
 	<span>&#x1F465; <a href="?s=users">Manage users</a></span>
+	<span>&#x2615; <a href="?s=updates">Updates</a></span>
 </nav>
 
 <article>
@@ -70,7 +79,7 @@ if(isset($_SERVER['PHP_AUTH_USER']))
 </article>
 
 <footer>
-	<a href="https://github.com/Maxelweb/HTAM">HTAM <?=VERSION;?></a> - Developed by <a href='https://marianosciacco.it'>M. Sciacco</a> - <a href="?s=updates">Check for updates</a>
+	&#x2615; <a href="<?=REPO;?>">HTAM <?=VERSION;?></a> &raquo; developed by <a href='https://marianosciacco.it'>M. Sciacco</a>
 </footer>
 
 </body>

@@ -155,7 +155,7 @@ class HTAM
 		$fh = fopen($this->hta(), "a+");
 		if(!$fh)
 			return false;
-		$prot = "\n# HTAM - START \n# HTAccess Manager Auto-generated script \nAuthType Basic \nAuthName \"Protected area\" \nAuthUserFile \"" . $this->htp() . "\"\nrequire valid-user \n# HTAM - END\n";
+		$prot = "\n# HTAM - START \n# HTAccess Manager auto-generated script \nAuthType Basic \nAuthName \"Protected area\" \nAuthUserFile \"" . $this->htp() . "\"\nrequire valid-user \n# HTAM - END\n";
 		fwrite($fh, $prot);
 		fclose($fh);
 		return true;
@@ -173,6 +173,9 @@ class HTAM
 
 		if($i >= count($lines))
 			return false;
+
+		if($lines[$i-1] == "\n")
+			unset($lines[$i-1]);
 
 		for($j=$i; $j < $i+7; $j++)
 			unset($lines[$j]);

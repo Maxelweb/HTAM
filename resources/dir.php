@@ -1,4 +1,6 @@
 <section>
+	<h3>&#x1F4C1; Directory Management</h3>
+
 <?php
 
 if($s == "dir")
@@ -98,7 +100,7 @@ if($s == "dir")
 		<?php if(!$htam->hasHtaccess() || !$htam->hasHtpasswd()){ ?>
 			<li><a href="?s=dir&a=3">Create htaccess and/or htpasswd</a> (if not present)</li>
 		<?php } if($htam->hasHtaccess()) { ?>
-		<li><a href="?s=dir&a=4">Delete htaccess file</a> (note: delete all existent config)</li>
+		<li><a href="?s=dir&a=4" onclick="">Delete htaccess file</a> (note: delete all existent config)</li>
 		<?php } if($htam->hasHtpasswd()) { ?>
 		<li><a href="?s=dir&a=5">Delete htpasswd file</a> (note: delete all users)</li>
 		<?php } ?>
