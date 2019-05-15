@@ -3,9 +3,6 @@
 
 <?php
 
-if($s == "dir")
-{
-
 	if($htam->hasHtaccess() && $htam->hasHtpasswd() && !$htam->checkPermissions())
 	{
 		echo bad("The <code>.htaccess</code> or <code>.htpasswd</code> files are not readable or writable. Set the correct permissions (664) from FTP or <a href='?s=dir&a=6'>attempt to change permissions</a>. ");
@@ -67,7 +64,6 @@ if($s == "dir")
 		else
 			echo bad("Error: unable to set permissions (664). You must do it manually from FTP.");
 	}
-}
 
 ?>
 </section>

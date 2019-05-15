@@ -1,11 +1,7 @@
-
 <section>
 	<h3>&#x1F465; User management</h3>
 
 <?php
-
-if($s == "users")
-{	
 
 	$users = $htam->getUsers();
 	$edit = isset($_GET['edit']) ? $_GET['edit'] : "";
@@ -84,7 +80,6 @@ if($s == "users")
 			
 		}
 	}
-}
 
 ?>
 </section>
