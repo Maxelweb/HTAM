@@ -15,6 +15,7 @@
 	<ul>
 		<li><strong>Current version:</strong> <?=$hup->currentVersion();?></li>
 		<li><strong>Latest version:</strong> <?=$hup->latestVersion();?></li>
+		<li><strong>Github repository for updates:</strong> <a href="<?=REPO;?>"><?=REPO;?></a></li>
 	</ul>
 
 	<?php
@@ -23,9 +24,12 @@
 			echo "<div class='responsive'><table>";
 			foreach ($hup->info() as $key => $value) 
 			{
-				echo "<td><strong>$key</strong></td><td>$value</td>";
+				echo "<tr>
+						<td><strong>$key</strong></td>
+						<td>$value</td>
+					  </tr>";
 			}
-			echo "</div>";
+			echo "</table></div>";
 		}
 	?>
 

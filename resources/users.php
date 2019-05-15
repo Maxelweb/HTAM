@@ -73,7 +73,7 @@ if($s == "users")
 			echo bad("The user selected has not been found.");
 		elseif( ($htam->countAdmin() == 1 || (isset($me) && $user->name() == $me->name()) )
 					&& $user->isAdmin() && $htam->isProtected())
-			echo bad("You can't remove the last administrator or yourself as administrator.");
+			echo bad("You can't remove the last administrator or yourself as administrator while protection is enabled.");
 		else
 		{
 			$users[$find]->toggleAdmin($user->isAdmin() ? 0 : 1); 
@@ -131,16 +131,18 @@ if($s == "users")
 			echo bad("No user found.",1);
 		else
 		{
-			echo "<div class='responsive'><table>";
+			echo "<span class='box'><strong>Total users:</strong> ".count($users).", <strong>Administrators:</strong> ".$htam->countAdmin()." </span>";
+			echo "<div class='responsive tdcenter'><table>";
 			foreach ($users as $user) 
 			{
-				echo "<tr><td>{$user->name()}</td>";
-				echo "<td>".($user->isAdmin() ? bad("administrator",1) : good("user",1))."</td>";
+				echo "<tr>";
+				echo "<td><strong>{$user->name()}</strong></td>";
+				echo "<td>".($user->isAdmin() ? bad("&#x1F920; administrator",1) : good("&#x1F603; user",1))."</td>";
 				echo "<td><span class='box'>&#x270F; <a href='#' onclick='setName(\"{$user->name()}\"); checkUsername();'>edit password</a></span></td>"; 
 				if(!$user->isAdmin())
-					echo "<td><span class='box'>&#x1F920; <a href='?s=users&edit={$user->name()}&a=3'>set admin</a></span></td>";
+					echo "<td><span class='box'>&#x2B06; <a href='?s=users&edit={$user->name()}&a=3'>set admin</a></span></td>";
 				else
-					echo "<td><span class='box'>&#x1F603; <a href='?s=users&edit={$user->name()}&a=3'>set user</a></span></td>";
+					echo "<td><span class='box'>&#x2B07; <a href='?s=users&edit={$user->name()}&a=3'>set user</a></span></td>";
 				echo "<td><span class='box'>&#x274C; <a href='?s=users&a=2&edit={$user->name()}'>delete</a></span></td>";
 				echo "</tr>";
 			}

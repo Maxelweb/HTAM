@@ -272,7 +272,6 @@ class HTAM
 }
 
 
-
 class HUser
 {	
 	private $username;
@@ -348,7 +347,7 @@ class HUpdates
 		if(!$json)
 			return array();
 
-		return json_decode($json, 1);
+		return json_decode($json);
 	}
 
 	function currentVersion()
@@ -359,7 +358,7 @@ class HUpdates
 	function latestVersion()
 	{
 	 	if(!empty($this->payload))
-	 		return ($this->payload)['version'];
+	 		return $this->payload->version;
 	 	return "N/A";
 	}
 
@@ -372,7 +371,7 @@ class HUpdates
 
 function generatePassword($psw)
 {
-	//return crypt($psw, base64_encode($psw));
+	// Better than crypt() for portability
 	return password_hash($psw, PASSWORD_BCRYPT);
 }
 

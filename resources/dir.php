@@ -28,14 +28,11 @@ if($s == "dir")
 			}
 		}
 		else
-		{
-			
-						
+		{	
 			if($htam->removeProtection())
 				echo good("Directory protection removed.");
 			else
 				echo bad("Error: unable to remove directory protection. Check file permissions.");
-		
 		}
 	}
 	elseif($a == 3)
@@ -79,7 +76,9 @@ if($s == "dir")
 	<h3>Informations</h3>
 
 	<ul>
-		<li><strong>Directory protection: </strong> <?=$htam->isProtected() ? good("Active",1) : bad("Disabled",1) ;?></li>
+		<li><strong>Directory protection: </strong> <?=$htam->isProtected() ? good("Active",1) : bad("Disabled",1) ;?>
+			[<a href="?s=dir&a=1">change</a>]
+		</li>
 		<li><strong>htaccess: </strong> <?=$htam->hasHtaccess() ? good("Yes",1) : bad("No",1) ;?></li>
 		<li><strong>htpasswd: </strong> <?=$htam->hasHtpasswd() ? good("Yes",1) : bad("No",1) ;?></li>
 		<li><strong>Area name: </strong> <?=$htam->getInfo()[0];?>
@@ -98,11 +97,11 @@ if($s == "dir")
 
 	<ul>
 		<?php if(!$htam->hasHtaccess() || !$htam->hasHtpasswd()){ ?>
-			<li><a href="?s=dir&a=3">Create htaccess and/or htpasswd</a> (if not present)</li>
+			<li>&#x2795; <a href="?s=dir&a=3">Create htaccess and/or htpasswd</a> (if not present)</li>
 		<?php } if($htam->hasHtaccess()) { ?>
-		<li><a href="?s=dir&a=4" onclick="">Delete htaccess file</a> (note: delete all existent config)</li>
+		<li>&#x2716; <a href="?s=dir&a=4" onclick="return confirm('By deleting the .htaccess you will delete all the existing configurations. Are you sure to continue?');">Delete .htaccess file</a> (<b>note:</b> delete all existent config)</li>
 		<?php } if($htam->hasHtpasswd()) { ?>
-		<li><a href="?s=dir&a=5">Delete htpasswd file</a> (note: delete all users)</li>
+		<li>&#x2716; <a href="?s=dir&a=5" onclick="return confirm('By deleting the .htpasswd you will delete all the current users. Are you sure to continue?');">Delete .htpasswd file</a> (<b>note:</b> delete all users)</li>
 		<?php } ?>
 	</ul>
 
@@ -120,9 +119,9 @@ if($s == "dir")
 			foreach ($subs as $sub => $name) 
 			{
 				if(is_dir($name))
-					echo "<li>&#x1F538; $name/</li>";
+					echo "<li>&#x1F538; <a href='$name'>$name/</a></li>";
 				else
-					echo "<li>&#x1F539; $name</li>";
+					echo "<li>&#x1F539; <a href='$name'>$name</a></li>";
 			}
 			echo "</ul>";
 		}

@@ -8,6 +8,10 @@ body{
 h1,h2,h3,h4{
 	color:  #333;
 }
+h1{
+	font-size: 140%;
+	color:  #4C5F7D;
+}
 header, nav, article, footer{
 	max-width: 1000px;
 	width: auto;
@@ -89,7 +93,6 @@ table{
 }
 td{
 	padding: 3px;
-	text-align: center;
 }
 tr{
 	background-color:  #E9E9E9;
@@ -99,4 +102,7 @@ tr:nth-child(odd){
 }
 #checker{
 	font-size:  80%;
+}
+.tdcenter td{
+	text-align: center;
 }

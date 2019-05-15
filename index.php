@@ -13,7 +13,7 @@ ini_set('display_errors', 1);
 ini_set("allow_url_fopen", 1);
 error_reporting(E_ALL);
 
-define("VERSION", "v0.1");
+define("VERSION", "0.1");
 define("REPO", "https://github.com/Maxelweb/HTAM");
 $s = isset($_GET['s']) ? $_GET['s'] : "";
 $a = isset($_GET['a']) ? $_GET['a'] : 0;
@@ -54,7 +54,7 @@ if($htam->isProtected() && !$me->isAdmin())
 <body>
 
 <header>
-	<h2>HTAccess Manager</h2>
+	<h1>HTAccess Manager</h1>
 	<small><strong>Current directory:</strong> <?=$htam->dir();?> <?=$htam->icon();?></small>
 </header>
 
@@ -79,7 +79,7 @@ if($htam->isProtected() && !$me->isAdmin())
 </article>
 
 <footer>
-	&#x2615; <a href="<?=REPO;?>">HTAM <?=VERSION;?></a> &raquo; developed by <a href='https://marianosciacco.it'>M. Sciacco</a>
+	&#x2615; <a href="<?=REPO;?>">HTAM v<?=VERSION;?></a> &raquo; developed by <a href='https://marianosciacco.it' target="_blank">Maxelweb</a>
 </footer>
 
 </body>
