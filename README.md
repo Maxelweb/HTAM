@@ -1,5 +1,7 @@
 # HTAccess Manager
 
+![screenshot htam](https://i.imgur.com/U7Sz3LI.png)
+
 ### Description
 
 Manage password-protected directories and users accesses directly from a Web Panel.
@@ -35,8 +37,9 @@ This software is pretty simple to install.
 - Block access and add specific users to visit your online folder
 - Manage users with passwords and roles
 - Quickly enable or disable directory protection
-- Automatic creation of the essential files (.htaccess, .htpasswd)
+- Automatic creation and delete of the essential files (.htaccess, .htpasswd)
 - View current file and sub-directories protected by the script
-- Works with existing .htaccess file (it only appends / remove the required lines to enable the script)
+- Works with existing .htaccess file (it only appends / remove some particular lines to toggle the script)
 - Works both with Linux and Windows
 - ☕ Online updates checker
+- 😍 Emoji support!
